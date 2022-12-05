@@ -16,7 +16,7 @@
 
 .NOTESs
 	Version:        1.0
-	Author:         
+	Author:         Joey Ashley
 	Creation Date:  2022-11-07
 	Purpose/Change: Initial script development
   
@@ -48,14 +48,18 @@ $base_directory="C:\Temp\MicroAudit\"
 $report_directory=($base_directory + "\Reports")
 # JSON report file 
 $json_report_file = ($report_directory + "\audit-" + $hostname + "-" + $timestamp + ".json")
+$csv_report_file = ($report_directory + "\programs-" + $hostname + "-" + $timestamp + ".csv")
 # Depth to parse JSON
 $depth = 3
 
 ## Prepare working directory
 
 # Check if directory exists and otherwise create it, then change to it
-if ($(test-path -path $base_directory)) { cd $base_directory; } # If the directory already exists, change to it
-else { new-item -type directory -path $base_directory; } #cd $base_directory } # Otherwise create it, then change to it
+if ($(test-path -path $base_directory)) { 
+	cd $base_directory; 
+} else {
+	new-item -type directory -path $base_directory; 
+} #cd $base_directory } # Otherwise create it, then change to it
 
 # Create report directory if it doesn't exist
 if ( ! $(test-path -path $report_directory)) { new-item -type directory -path $report_directory }
@@ -117,4 +121,4 @@ $x.tracert."8.8.8.8" = test-netconnection 8.8.8.8 -traceroute
 $x.endtime = get-timestamp
 
 $x | ConvertTo-Json -Depth 3 | out-file -FilePath $json_report_file -Encoding utf8
-$x.programs | Export-Csv -NoClobber -NoTypeInformation programs.csv
+$x.programs | Export-Csv -NoClobber -NoTypeInformation "$csv_report_file"
